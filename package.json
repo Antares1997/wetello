@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "install": "npm install && cd client/ && npm install",
+    "pre-build": "cd client/ && npm install",
     "build": "cd client/ && ng build --prod"
   },
   "dependencies": {
