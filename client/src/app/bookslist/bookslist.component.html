@@ -1,0 +1,88 @@
+<app-nav></app-nav>
+<div class="container">
+  <app-searchbooks (search)="findBook($event)" (onChange)='onChanged($event)'></app-searchbooks>
+  <div class="title">
+    {{title}}
+  </div>
+  <!-- <table class="booksTable" *ngIf='this.books' matSort (matSortChange)="sortData($event)">
+    <tr>
+      <th><img src='assets/arrow.png' width="10px">#</th>
+      <th mat-sort-header='author'>Author</th>
+      <th mat-sort-header='title'>Tittle</th>
+      <th mat-sort-header='rating'>Rating</th>
+      <th><img src='assets/arrow.png' width="10px">Status</th>
+      <th><img src='assets/arrow.png' width="10px">Action</th>
+    </tr>
+    <tr *ngFor='let book of sortedBooks; let i = index' [attr.data-index]="i">
+      <td>{{i + 1}}</td>
+      <td>{{book.author}}</td>
+      <td>{{book.title}}</td>
+      <td>{{book.rating}}</td>
+      <td>{{book.status}}</td>
+      <td>Action</td>
+    </tr>
+  </table>
+  <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[1, 10, 20]" [showFirstLastButtons]="true">
+    asd
+  </mat-paginator> -->
+
+  <div class="example-container mat-elevation-z8">
+    <mat-table #table [dataSource]="dataSource" matSort matSortDisableClear>
+
+      <ng-container matColumnDef="position">
+        <mat-header-cell *matHeaderCellDef mat-sort-header (click)='toggleSortArrow($event)'> No. </mat-header-cell>
+        <mat-cell *matCellDef="let book"> {{book.position}} </mat-cell>
+      </ng-container>
+      <!-- Position Column -->
+      <ng-container matColumnDef="author">
+        <mat-header-cell *matHeaderCellDef mat-sort-header (click)='toggleSortArrow($event)'> Author </mat-header-cell>
+        <mat-cell *matCellDef="let book"> {{cut(book.author)}} </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="title">
+        <mat-header-cell *matHeaderCellDef mat-sort-header (click)='toggleSortArrow($event)'> Title </mat-header-cell>
+        <mat-cell *matCellDef="let element" (click)='showInfo(element)' data-toggle="modal" data-target=".bd-example-modal-lg"> {{cut(element.title)}} </mat-cell>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="rating">
+        <mat-header-cell *matHeaderCellDef mat-sort-header (click)='toggleSortArrow($event)'> Rating </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <app-rating [(rating)]='element.rating' [(id)]='element._id'></app-rating>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header (click)='toggleSortArrow($event)'> Status </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <app-read-status [targetBook]='element'></app-read-status>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef mat-sort-header (click)='toggleSortArrow($event)'> Actions</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button type="button" name="button" class="btn btn-success" (click)=Edit(element)> Edit</button>
+          <button type="button" name="button" class="btn btn-danger" (click)='Delete(element)'>Delete</button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator [pageSize]="3" [showFirstLastButtons]="true" [hidePageSize]='true' [pageSizeOptions]=[2]>
+    </mat-paginator>
+  </div>
+  <div *ngIf='infoPageObject'>
+    <app-infopage [infoAboutBook]='infoPageObject' (close)='Close(event)'></app-infopage>
+  </div>
+</div>
+
+
+
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->

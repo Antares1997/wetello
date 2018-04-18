@@ -1,0 +1,51 @@
+.info {
+  display: block;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+
+.content .icon-image, .content .info-text {
+  min-height: 300px;
+}
+
+.content .icon-image {
+  width: 30%;
+  padding: 20px;
+}
+
+.content .info-text {
+  width: 70%;
+}
+
+.modal-backdrop.show {
+  opacity: 0 !important;
+}
+
+.close {
+  height: 15px;
+  width: 15px;
+  position: absolute;
+  right: 0px;
+  cursor: pointer;
+}
+
+.close img {
+  height: 15px;
+  width: 15px;
+}
+
+/*
+.modal {
+  top: 1;
+  bottom: 0;
+} */
+
+/* .modal-dialog {
+  margin: 400px auto;
+} */

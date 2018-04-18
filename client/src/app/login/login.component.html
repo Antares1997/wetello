@@ -1,0 +1,17 @@
+<div class="container">
+  <app-messages [status]='status' [urlTarget]='urlTarget'></app-messages>
+  <div class="login">
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2"> Login</span>
+      <input type="text" class="form-control" name='username' placeholder="Username" aria-describedby="sizing-addon2" [(ngModel)]="user.username">
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2"> Password</span>
+      <input type="text" class="form-control" name='password' placeholder="Password" aria-describedby="sizing-addon2" [(ngModel)]="user.password">
+    </div>
+    <div class="btn-group">
+      <a href="/registration">Sign up</a>
+      <button type="button" class=" btn btn-exec " (click)='login(user)' data-toggle="modal" data-target="#reginModal">Sign in</button>
+    </div>
+  </div>
+</div>

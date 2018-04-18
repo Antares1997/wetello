@@ -1,0 +1,10 @@
+
+
+# Ignored dirs
+node_modules/
+
+# Ignored files
+uploads/*
+
+# Exclude files
+!uploads/.gitkeep

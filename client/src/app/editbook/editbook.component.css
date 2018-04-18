@@ -1,0 +1,60 @@
+form {
+  width: 500px;
+}
+
+.title {
+  font-size: 30px;
+  padding: 20px;
+}
+
+.btn-group {
+  min-width: 500px;
+}
+
+input, textarea {
+  width: 500px;
+}
+
+input[type=file] {
+  display: inline;
+  visibility: hidden;
+}
+
+.file {
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+}
+
+.selectStatus {
+  width: 200px;
+}
+
+.custom-select {
+  content: '\1241';
+  background-image: url('60995.svg');
+  background-size: 15px;
+}
+
+.btn-group button {
+  display: block;
+  min-width: 120px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-left: 10px;
+}
+
+.btn-group.btns {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#exampleInputFile {
+  /* visibility: hidden; */
+  display: none;
+}
+
+.listOfBooksToChange {
+  display: block;
+  cursor: pointer;
+}

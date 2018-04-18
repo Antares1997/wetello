@@ -1,0 +1,5 @@
+<label for="readStatus${{targetBook._id}}" [ngClass]="{two: readStatus}">
+  <span class="statusText">{{statusText}}</span>
+<input type="checkbox" (change)='getStatusValue($event)' [checked]='readStatus' id="readStatus${{targetBook._id}}" />
+
+</label>

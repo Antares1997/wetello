@@ -1,0 +1,52 @@
+<app-nav></app-nav>
+<div class="container" *ngIf='this.token != null'>
+  <div class="title">
+    {{titles}}
+  </div>
+  <form [formGroup]='addBookForm' (ngSubmit)='onSubmit()'>
+    <div class="form-group" *ngIf='!bookId'>
+      <label for="exampleInputFile" class="file" id="samplefile">{{uploadStatus}}</label>
+      <button type="button" id="exampleInputFile" name="file" data-toggle="modal" data-target="#reginModal"></button>
+      <!-- <p class="help-block">Example block-level help text here.</p> -->
+    </div>
+    <div class="form-group" *ngIf='bookId'>
+      <label for="" class="file">File will changed: {{bookAuthor}} - {{bookTitle}}</label>
+      <!-- <p class="help-block">Example block-level help text here.</p> -->
+    </div>
+    <div class="list-group">
+      <app-modal [books]='books' (selectBook)='selectBooks($event)' [title]='titleHeader'></app-modal>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1"></label>
+      <input type="text" class="form-control" id="author" placeholder="author" [formControl]='addBookForm.get("author")' [(ngModel)]='author'>
+    </div>
+
+    <div class="form-group">
+      <label for="title"></label>
+      <input type="text" class="form-control" id="title" placeholder="title" [formControl]='addBookForm.get("title")' [(ngModel)]='title'>
+    </div>
+    <div class="form-group">
+      <label for="review"></label>
+      <textarea type="textarea" class="form-control" id="review" placeholder="Description" rows='10' [formControl]='addBookForm.get("review")' [(ngModel)]='review'> </textarea>
+    </div>
+    <div class="form-group">
+
+      <div class="btn-group">
+        <select class="selectStatus custom-select mr-sm-2" id="inlineFormCustomSelect" [formControl]='addBookForm.controls["readStatus"]'>
+            <option selected disabled style="display: none" value="0">Select</option>
+            <option value="1">On</option>
+            <option value="0">Off</option>
+          </select>
+      </div>
+      <div class="btn-group btns">
+        <button type="reset" name="button" (click)='Reset()'>Cancel</button>
+        <button type="submit" name="button">Submit</button>
+      </div>
+    </div>
+    <!-- <button type="submit" class="btn btn-default">Submit</button> -->
+  </form>
+
+</div>
+<app-info-message [message]='message'>
+  <img [src]='WAIT' alt="">
+</app-info-message>

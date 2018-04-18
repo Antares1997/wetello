@@ -1,0 +1,53 @@
+  .btn {
+    cursor: pointer;
+    max-width: 80px;
+    background: none;
+  }
+
+  .btn img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .navbar, .bg-inverse {
+    /* background: #fff; */
+    background: #fff !important;
+    border: 2px solid #000;
+    padding: 0px;
+  }
+
+  .bg-inverse a {
+    color: #000;
+  }
+
+  .bg-inverse li {
+    padding: 0px;
+  }
+
+  .bg-inverse a:hover {
+    color: #000;
+  }
+
+  .bg-inverse li {
+    min-width: 100px;
+    text-align: center;
+  }
+
+  .userInfo {
+    font-size: 20px;
+    color: #000;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .userInfo .email {
+    font-size: 12px;
+    color: #000;
+  }
+
+  .current {
+    background-color: #babdc1;
+  }

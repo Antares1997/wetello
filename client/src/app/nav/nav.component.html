@@ -1,0 +1,28 @@
+<div class="container">
+  <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse mb-4">
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item " [ngClass]="{'current':curentLink == 'bookslist'}">
+          <a class="nav-link" [routerLink]="['/bookslist']">Books</a>
+        </li>
+        <li class="nav-item " [ngClass]="{'current':curentLink == 'addbook'}">
+          <a class="nav-link" [routerLink]="['/addbook']">Add</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'current':curentLink == 'editbook'}">
+          <a class="nav-link" [routerLink]="['/editbook']">Edit</a>
+        </li>
+      </ul>
+      <div class="form-inline my-2 my-lg-0">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item ">
+            <p class=" userInfo" disabled>{{username}}<span class="email">({{email}})</span></p>
+          </li>
+          <li><button type="button" class="btn" style="margin-left: 20px" name="button" (click)='logOut()'>
+<img [src]='EXIT' alt="">
+          </button></li>
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+</div>

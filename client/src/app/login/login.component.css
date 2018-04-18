@@ -1,0 +1,48 @@
+.login {
+  display: -webkit-block;
+  display: -ms-block;
+  display: block;
+  margin: 0 auto;
+  margin-top: 15%;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  align-items: center;
+  width: 50%;
+  border: 2px solid black;
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+
+.login .input-group {
+  margin: 0 auto;
+  margin-top: 20px;
+  display: flex;
+  width: 80%;
+}
+
+.login .input-group .input-group-addon {
+  width: 100px;
+  max-width: 100px;
+}
+
+.btn-group {
+  display: flex;
+  margin: 0 auto;
+  margin-top: 30px;
+  width: 80%;
+  position: relative;
+}
+
+.btn-group .btn-exec {
+  position: absolute;
+  right: 0px;
+  cursor: pointer;
+}

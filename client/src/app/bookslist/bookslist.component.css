@@ -1,0 +1,117 @@
+.form-inline {
+  justify-content: flex-end;
+}
+
+.title {
+  font-size: 30px;
+  padding: 20px;
+}
+
+.booksTable {
+  width: 100%;
+  border: 1px solid black;
+}
+
+.booksTable td, th {
+  border: 1px solid black;
+  text-align: center;
+  cursor: pointer;
+}
+
+span {
+  display: none;
+}
+
+mat-header-cell {
+  cursor: pointer;
+}
+
+.mat-sort-header-arrow {
+  display: none;
+}
+
+.test::before {
+  content: '\25BC';
+  float: left;
+  margin-right: 2px;
+  visibility: hidden;
+  color: black;
+}
+
+.header-cell--sorted::before {
+  content: '\25b2';
+  float: left;
+  margin-right: 2px;
+  visibility: hidden;
+  color: black;
+}
+
+mat-header-cell:hover::before {
+  visibility: visible;
+  color: #737373;
+}
+
+mat-header-cell {
+  font-size: 15px;
+  font-weight: 700;
+  color: black;
+}
+
+.mat-sort-header-button {
+  color: red !important;
+  font-size: 20px;
+}
+
+.mat-column-position {
+  width: 60px;
+  max-width: 60px;
+}
+
+.mat-column-title {
+  width: 150px;
+  max-width: 150px;
+  cursor: pointer;
+}
+
+.mat-column-status, .mat-column-actions {
+  width: 140px;
+  max-width: 140px;
+}
+
+mat-cell, .mat-cell, .mat-header-cell {
+  justify-content: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 1px solid black;
+  padding: 5px;
+  display: flex;
+  word-wrap: break-word;
+  align-items: center;
+}
+
+.mat-header-row, .mat-row {
+  align-items: stretch;
+  border-bottom-width: 0px;
+  padding: 0px;
+}
+
+.mat-elevation-z8 {
+  box-shadow: 0px !important;
+  -webkit-box-shadow: none !important;
+}
+
+.btn {
+  max-width: 70px;
+  width: 70px;
+  cursor: pointer;
+}
+
+.btn-success {
+  text-align: center;
+  border-radius: 15px;
+}
+
+.btn-danger {
+  border-radius: 15px;
+  text-align: center;
+}

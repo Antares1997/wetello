@@ -1,0 +1,22 @@
+<div class="modal fade" id="reginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{title}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="" *ngIf='books !== undefined'>
+        <div class="modal-body rounded" *ngIf='books.length > 0'>
+          <ol class="listOfBook" *ngFor='let book of books'>
+            <li (click)='toSelectBook(book)' data-dismiss="modal" aria-label="Close" class=""><a href="#">{{book.author}} - {{book.title}}</a></li>
+          </ol>
+        </div>
+        <div class="modal-body" *ngIf='books.length === 0'>
+          <p>You have not uploaded any books!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

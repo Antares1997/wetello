@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import "../node_modules/ngx-bar-rating/themes/br-default-theme.css";
+@import '../node_modules/ngx-bar-rating/themes/br-movie-theme.css';
+.mat-sort-header-pointer-middle, .mat-sort-header-pointer-left, .mat-sort-header-stem, .mat-sort-header-pointer-right, .mat-paginator-range-label {
+  display: none !important;
+}
+
+.mat-paginator-container {
+  display: flex;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.mat-paginator-range-actions {
+  margin: 0 auto;
+}
+
+/* .mat-sort-header-stem {
+  width: 8px !important;
+  height: 8px !important;
+  background: none !important;
+  position: absolute !important;
+  left: 0px;
+  bottom: -8px !important;
+  border: 8px solid transparent !important;
+  border-top: 8px solid black !important;
+} */
