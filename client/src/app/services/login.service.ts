@@ -37,9 +37,9 @@ export class LoginService {
         } else {
           this.token = response.headerToken;
           this.localStorage.setItem('token', this.token).subscribe(() => { });
-          this.router.navigate(['/bookslist']);
-
-          // this.router.navigate(['/bookslist'])
+          // this.router.navigate(['/bookslist']);
+          window.location.href = '/bookslist';
+          this.urlTarget = '/bookslist';
         }
 
 

@@ -86,7 +86,7 @@ module.exports.login = function(req, res) {
     if (err) {
       if (err instanceof AuthError) {
         sendJSONresponse(res, 200, {
-          'message': ' No user found with this data!',
+          'message': ' Users are not found with this data!',
           'status': 0
         })
       } else [

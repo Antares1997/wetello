@@ -24,7 +24,7 @@ export class AddbookComponent implements OnInit {
   typeFile: String;
   sizeFile: number = 20000000;
   uploadStatus: boolean = true;
-  private WAIT = require("../assets/PLSWAIT.gif");
+  public WAIT = require("../assets/PLSWAIT.gif");
   constructor(
     private fb: FormBuilder,
     public el: ElementRef,

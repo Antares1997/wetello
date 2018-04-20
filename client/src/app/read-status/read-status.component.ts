@@ -18,9 +18,9 @@ import {
 
 export class ReadStatusComponent implements OnInit {
   @Input() targetBook;
-  private readStatus: String;
+  public readStatus: String;
   private readFormStatus: FormGroup;
-  private statusText: String;
+  public statusText: String;
   private token: String;
   constructor(
     private fb: FormBuilder,

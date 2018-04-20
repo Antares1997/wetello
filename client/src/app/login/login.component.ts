@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 
 export class LoginComponent implements OnInit {
   user = {
-    login: '',
+    username: '',
     password: ''
   }
   status: Number;

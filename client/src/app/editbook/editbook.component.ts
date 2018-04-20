@@ -29,7 +29,7 @@ export class EditbookComponent implements OnInit {
   bookTitle: String = null;
   bookAuthor: String = null;
   bookId: any = null;
-  private WAIT = require("../assets/PLSWAIT.gif");
+  public WAIT = require("../assets/PLSWAIT.gif");
   constructor(private fb: FormBuilder,
     public el: ElementRef,
     private getbooksService: GetbooksService,

@@ -12,7 +12,7 @@ export class NavComponent implements OnInit {
   username: String;
   email: String = 'test';
   curentLink: String;
-  private EXIT = require("../assets/exit.png");
+  public EXIT = require("../assets/exit.png");
   constructor(protected localStorage: AsyncLocalStorage,
     private loginService: LoginService,
     private route: ActivatedRoute,

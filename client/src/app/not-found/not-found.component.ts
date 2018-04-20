@@ -6,7 +6,7 @@ declare var require: any;
   styleUrls: ['./not-found.component.css']
 })
 export class NotFoundComponent implements OnInit {
-  private notFound = require("../assets/notfound.png");
+  public notFound = require("../assets/notfound.png");
   constructor() { }
 
   ngOnInit() {

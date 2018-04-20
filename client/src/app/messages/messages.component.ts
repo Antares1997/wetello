@@ -19,12 +19,13 @@ export class MessagesComponent implements OnInit {
     if (this.status === 1) {
       this.router.navigate([this.urlTarget]);
     } else {
-      // window.location.reload(true);
+      window.location.reload(true);
     }
     this.messageService.clear();
     return false;
   }
   ngOnInit() {
+    console.log('urlTarget', this.urlTarget);
   }
 
 }
