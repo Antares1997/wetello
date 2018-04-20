@@ -19,7 +19,7 @@
     </div>
     <div class="input-group">
       <span class="input-group-addon" id="sizing-addon2"> Password</span>
-      <input type="text" class="form-control" placeholder="Password" aria-describedby="sizing-addon2" [(ngModel)]="user.password">
+      <input type="password" class="form-control" placeholder="Password" aria-describedby="sizing-addon2" [(ngModel)]="user.password">
     </div>
     <div class="btn-group">
       <a href="/login">Sign in</a>
@@ -28,35 +28,3 @@
   </div>
 </div>
 
-
-<!-- <div class="container">
-  <app-messages [status]='status' [urlTarget]='urlTarget'></app-messages>
-  <div class="registration">
-    <form class="" action="index.html" method="post" [formGroup]='registrationForm' (ngSubmit)='registration(registrationForm.value)'>
-      <div class="input-group">
-        <span class="input-group-addon" id="sizing-addon2"> Email</span>
-        <input type="text" class="form-control" name='email' placeholder="E-mail" aria-describedby="sizing-addon2" [formControl]="registrationForm.get('email')">
-      </div>
-      <div class="input-group">
-        <span class="input-group-addon" id="sizing-addon2"> Login</span>
-        <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon2" [formControl]="registrationForm.get('username')">
-      </div>
-      <div class="input-group">
-        <span class="input-group-addon" id="sizing-addon2"> Name</span>
-        <input type="text" class="form-control" placeholder="Name" aria-describedby="sizing-addon2" [formControl]="registrationForm.get('name')">
-      </div>
-      <div class=" input-group ">
-        <span class="input-group-addon " id="sizing-addon2 "> Surname</span>
-        <input type="text " class="form-control " placeholder="Surname " aria-describedby="sizing-addon2" [formControl]="registrationForm.get('surname')">
-      </div>
-      <div class="input-group ">
-        <span class="input-group-addon " id="sizing-addon2 "> Password</span>
-        <input type="text " class="form-control " placeholder="Password " aria-describedby="sizing-addon2" [formControl]="registrationForm.get('password')">
-      </div>
-      <div class="btn-group ">
-        <a href="/login ">Sign in</a>
-        <button type="button " class="btn btn-exec " data-toggle="modal " data-target="#reginModal ">Sign up</button>
-      </div>
-    </form>
-  </div>
-</div> -->
