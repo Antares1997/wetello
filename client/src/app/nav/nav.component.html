@@ -15,6 +15,9 @@
       <div class="form-inline my-2 my-lg-0">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item ">
+            <a class="nav-link" [routerLink]="['/chat']">Chat</a>
+          </li>
+          <li class="nav-item ">
             <p class=" userInfo" disabled>{{username}}<span class="email">({{email}})</span></p>
           </li>
           <li><button type="button" class="btn" style="margin-left: 20px" name="button" (click)='logOut()'>

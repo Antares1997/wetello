@@ -1,3 +1,4 @@
+"use strict";
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -10,14 +11,28 @@ var multer = require('multer');
 var flash = require('connect-flash');
 var multer = require('multer');
 var expressValidator = require('express-validator')
-
 require('./api/models/db');
 var routesApi = require('./api/routes');
 
+var http = require("http");
 var app = express();
+http = http.createServer(app);
+var socketIo = require("socket.io");
+var io = socketIo(http, {
+  'forceNew': true
+});
 
+var ctrlIo = require('./api/controllers/chat/chat-server').ctrlIo;
+io.on('connection', ctrlIo);
+http.listen(3000, function() {
+  console.log('on 3000!');
+});
+app.use('/tmp', express.static(path.join(__dirname, '/tmp/')));
 app.use(express.static(path.join(__dirname, '/client/dist/')));
-
+// app.use(() => {
+//   console.log(__dirname)
+// })
+// app.use(express.static(path.join(__dirname, '/uploads')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -57,6 +72,7 @@ app.use(session({
 app.use('/api', routesApi);
 app.use('/*', (req, res) => {
   res.sendFile(__dirname + '/client/dist/index.html');
+  // res.redirect('/');
 });
 
 // catch 404 and forward to error handler
@@ -76,7 +92,6 @@ app.use(function(req, res, next) {
 //   res.status(err.status || 500);
 //   res.render('error');
 // });
-app.listen(3000, function() {
-  console.log('on 3000!');
-});
-module.exports = app;
+
+// module.exports = app;
+module.exports.http = http;

@@ -8,6 +8,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { AddbookComponent } from './addbook/addbook.component';
 import { EditbookComponent } from './editbook/editbook.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ChatComponent } from './chat/chat.component';
 const routes: Routes = [
   { path: '', redirectTo: '/bookslist', pathMatch: 'full' },
   { path: 'bookslist', component: BookslistComponent },
@@ -18,6 +19,8 @@ const routes: Routes = [
   { path: 'editbook/:id', component: EditbookComponent },
   { path: 'registration', component: RegistrationComponent },
   { path: 'notFound', component: NotFoundComponent },
+  { path: 'chat', component: ChatComponent },
+  { path: 'chat/:id', component: ChatComponent },
   { path: '**', redirectTo: '/notFound', pathMatch: 'full' },
 
 ]

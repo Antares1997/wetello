@@ -26,9 +26,6 @@ export interface IRequestOptions {
 export class GetbooksService {
   request_key = {};
   token: String;
-  testHeaders = {
-    headers: {}
-  };
   constructor(
     private http: HttpClient,
     public messageService: MessageService,

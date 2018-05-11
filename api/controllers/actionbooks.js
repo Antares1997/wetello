@@ -2,12 +2,10 @@ var mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectID;
 var Loc = mongoose.model('book');
 var User = mongoose.model('user');
-var temp_id = '5a70b6073d8dba93745d95bf';
 var jwt = require('../models/users').jwt;
 var multer = require('multer');
 var Busboy = require('busboy');
 var path = require('path');
-var inspect = require('util').inspect;
 const storage = multer.diskStorage({
   destination: './uploads',
   filename: function(req, file, cb) {
@@ -27,7 +25,6 @@ var sendJSONresponse = function(res, status, content) {
 };
 
 function verifyInp(token, secret, res) {
-  var result = 'test';
   jwt.verify(token, secret, (err, data) => {
     if (err) {
       console.log('bad');

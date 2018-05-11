@@ -1,0 +1,31 @@
+<div class="text-container" [ngClass]="{'companion':curentUserId !== allUsersId}">
+  <div class="text-block" on-contextmenu='onContextMenu($event)'>
+    <div class="logo">
+      <img src="{{currentFACE}}" alt="">
+    </div>
+    <div class="">
+      <div class="content">
+        {{message}}
+        <div class="returnedImages" [ngClass]="{'companion':curentUserId !== allUsersId}">
+          <img *ngFor='let image of returnedImages' [src]='image' alt="">
+          <!-- <img src='https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/img.jpg' alt=""> -->
+        </div>
+      </div>
+      <div class="sign">
+        Sent by <b>{{username}}</b> at <span class="date">{{hour}}:{{minutes}}, on {{date}}, {{month}} {{year}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="menu hidemenu" #contextMenu style="position:fixed" [style.top.px]='mouse_y' [style.left.px]='mouse_x' (mouseenter)='enter($event)' (mouseleave)="leave($event)">
+  <!-- {{node}} -->
+  <div class="dropdown">
+    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Action
+    </a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <button class="dropdown-item" (click)='Delete(chatEl._id)'>Delete</button>
+      <button class="dropdown-item" (click)='DeleteForBoth(chatEl._id)' *ngIf='curentUserId === allUsersId'>Delete for both</button>
+    </div>
+  </div>
+</div>

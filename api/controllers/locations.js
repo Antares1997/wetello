@@ -9,20 +9,18 @@ var sendJSONresponse = function(res, status, content) {
 };
 
 function verifyInp(token, secret, res) {
-  var result = 'test';
+  var result;
   jwt.verify(token, secret, (err, data) => {
     if (err) {
-      console.log('bad');
+      console.log('bad verifyInp');
       result = false;
     } else {
       result = true;
-      console.log('Succsess', data);
     }
   })
   return result;
 }
 module.exports.getUser = function(req, res) {
-  console.log('here');
   if (verifyInp(req.token, 'secret', res)) {
     User
       .findOne({
@@ -34,7 +32,8 @@ module.exports.getUser = function(req, res) {
         if (data) {
           return sendJSONresponse(res, 200, {
             "email": data.email,
-            "username": data.username
+            "username": data.username,
+            "id": data._id
           });
         }
       })
@@ -54,7 +53,6 @@ module.exports.getBooksList = function(req, res) {
             .find()
             .select('author title status rating url review info downloader_Id')
             .exec(function(err, docs) {
-              console.log('docs', docs);
               if (err) throw err;
               if (!docs) {
                 return sendJSONresponse(res, 200, {

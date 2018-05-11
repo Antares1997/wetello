@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule, } from '@angular/http';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+// import { Ng2ContextMenuModule } from "ng2-context-menu";
 // import { Routes, RouterModule } from '@angular/router';
 import {
   FormsModule,
@@ -22,6 +23,7 @@ import { MessageService } from './services/message.service';
 import { RegistrationService } from './services/registration.service';
 import { LoginService } from './services/login.service';
 import { GetbooksService } from './services/books.service';
+import { GoogleAuthService } from './services/google-auth.service'
 import { MessagesComponent } from './messages/messages.component';
 import { MatTableModule } from '@angular/material/table'
 import { MatSortModule } from '@angular/material/sort';
@@ -43,6 +45,29 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReadStatusComponent } from './read-status/read-status.component';
 import { InfoMessageComponent } from './info-message/info-message.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import {
+  SocialLoginModule,
+  AuthServiceConfig,
+  GoogleLoginProvider,
+  FacebookLoginProvider,
+} from "angular5-social-login";
+import { ChatComponent } from './chat/chat.component';
+import { ChatWindowComponent } from './chat/chat-window/chat-window.component';
+import { SocketService } from './chat/services/socket.service';
+import { ContextmenuComponent } from './contextmenu/contextmenu.component';
+
+// import { GoogleSignInComponent } from 'angular-google-signin';
+export function getAuthServiceConfigs() {
+  let config = new AuthServiceConfig(
+    [
+      {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider("309614812409-8vm7b4b2fplpnqnqtnkuabm45ntje88e.apps.googleusercontent.com")
+      },
+    ]
+  );
+  return config;
+}
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 @NgModule({
   declarations: [
@@ -61,6 +86,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ReadStatusComponent,
     InfoMessageComponent,
     NotFoundComponent,
+    ChatComponent,
+    ChatWindowComponent,
+    ContextmenuComponent,
+    // GoogleSignInComponent
   ],
   imports: [
     BrowserModule,
@@ -82,10 +111,16 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ReactiveFormsModule,
     SocketIoModule.forRoot(config),
     BarRatingModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    SocialLoginModule,
+    // Ng2ContextMenuModule
+    // GoogleSignInComponent
 
   ],
-  providers: [MessageService, RegistrationService, LoginService, GetbooksService, HttpModule, BookOption],
+  providers: [MessageService, RegistrationService, LoginService, GetbooksService, HttpModule, BookOption, {
+    provide: AuthServiceConfig,
+    useFactory: getAuthServiceConfigs
+  }, GoogleAuthService, SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

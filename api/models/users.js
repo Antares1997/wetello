@@ -3,6 +3,7 @@ var crypto = require('crypto');
 var async = require('async');
 var util = require('util');
 var jwt = require('jsonwebtoken');
+var path = require('path');
 mongoose.Promise = global.Promise;
 mongoose.set('debug', true);
 var usersSchema = new mongoose.Schema({
@@ -34,7 +35,19 @@ var usersSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  token: String
+  google: {
+    id: String
+  },
+  token: {
+    type: String
+  },
+  avatar: {
+    type: String
+  }
+  // google_id: {
+  //   type: String,
+  //   default: ''
+  // }
 });
 
 usersSchema.methods.encryptPassword = function(password) {
@@ -57,7 +70,7 @@ usersSchema.methods.updatePassword = function(newpassword) {
   this.hashedPassword = this.encryptPassword(newpassword);
 };
 
-usersSchema.statics.registration = function(username, name, surname, password, email, callback) {
+usersSchema.statics.registration = function(username, name, surname, password, email, googleId, callback) {
   var User = this;
   async.waterfall([
     function(callback) {
@@ -76,14 +89,18 @@ usersSchema.statics.registration = function(username, name, surname, password, e
       if (user) {
         callback(new AuthError('The user with this email or username is registered!'));
       } else {
-
+        var avatar = path.join('../../assets/') + getRandomFace() + ".png"
         user = new User({
           username: username,
           name: name,
           surname: surname,
           password: password,
           email: email,
-          token: 'token'
+          token: 'token',
+          google: {
+            id: googleId
+          },
+          avatar: avatar
         });
         jwt.sign({
           user: user
@@ -132,6 +149,10 @@ function AuthError(message) {
   this.message = message;
   return message;
 };
+
+function getRandomFace() {
+  return Math.floor(Math.random(0, 10) * 17);
+}
 exports.AuthError = AuthError;
 exports.jwt = jwt;
 mongoose.model('user', usersSchema, 'users');

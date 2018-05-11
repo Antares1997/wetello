@@ -33,8 +33,14 @@ export class BookslistComponent implements OnInit {
     public el: ElementRef,
     protected localStorage: AsyncLocalStorage,
     private router: Router,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private route: ActivatedRoute
   ) {
+    this.route.queryParams.subscribe(params => {
+      if (params.userToken) {
+        this.localStorage.setItem('token', params.userToken).subscribe(() => { });
+      }
+    });
     this.loginService.getToken().subscribe((token) => {
       if (!token) {
         this.router.navigate(['login'])
@@ -47,8 +53,7 @@ export class BookslistComponent implements OnInit {
           this.getbooksService.getAll(token).subscribe((books) => {
             let temp = 0;
             this.books = books.books;
-            console.log(this.books, token)
-            // cut(this.books);
+            console.log(this.books, token);
             addPosition(this);
             this.dataSource = new MatTableDataSource<BOOKS>(this.books);
             this.dataSource.paginator = this.paginator;

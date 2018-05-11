@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import { catchError, map, tap } from 'rxjs/operators';
 import { USER } from '../user';
 import { MessageService } from '../services/message.service';
+import { AsyncLocalStorage } from 'angular-async-local-storage';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -19,6 +20,7 @@ export class RegistrationService {
   constructor(
     private http: HttpClient,
     public messageService: MessageService,
+    protected localStorage: AsyncLocalStorage
   ) {
     console.log('Registration!');
   }
@@ -27,11 +29,10 @@ export class RegistrationService {
       tap((response: any) => {
         if (response.errors) {
           response.errors.map(err => {
-            console.log(err.msg)
             this.messageService.add(err.msg);
           })
         } else {
-          console.log('wqeqwe')
+          this.localStorage.setItem('token', response.headerToken).subscribe(() => { });
           this.status = Number(response.status);
           this.urlTarget = String('/login');
           this.messageService.add(response.message);

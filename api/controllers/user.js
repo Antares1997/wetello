@@ -7,6 +7,8 @@ var multer = require('multer');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var jwt = require('../models/users').jwt;
+var configPassport = require('./config/passport');
+var Request = require('request');
 const {
   body,
   validationResult
@@ -21,11 +23,13 @@ var sendJSONresponse = function(res, status, content) {
   res.json(content);
 };
 module.exports.registration = function(req, res) {
+  console.log('body', req.body);
   let username = req.body.username,
     name = req.body.name,
     surname = req.body.surname,
     password = req.body.password,
-    email = req.body.email;
+    email = req.body.email,
+    googleId = req.body.googleId || false;
   req.checkBody('email', 'Email filed is required!').notEmpty();
   req.checkBody('email', 'Email is valid!').isEmail();
   req.check('name', 'Name filed is required!').notEmpty();
@@ -43,7 +47,7 @@ module.exports.registration = function(req, res) {
     errors = [];
     return;
   } else {
-    User.registration(username, name, surname, password, email, function(err, user) {
+    User.registration(username, name, surname, password, email, googleId, function(err, user) {
       if (err) {
         if (err instanceof AuthError) {
           sendJSONresponse(res, 200, {
@@ -60,9 +64,11 @@ module.exports.registration = function(req, res) {
       } else {
         confirmnumber = randomChars.get(8);
         sendMessage(confirmnumber, req.body.email);
+        console.log('user.token', user.token);
         sendJSONresponse(res, 200, {
           'message': 'A test message has been sent to your mail, and your account has been successfully created!',
-          'status': 1
+          'status': 1,
+          'headerToken': user.token
         })
         return;
       }
@@ -81,7 +87,6 @@ function verifyInp(token, secret, res) {
   })
 }
 module.exports.login = function(req, res) {
-  console.log(req.body.username + ' ' + req.body.password);
   User.authhorize(req.body.username, req.body.password, function(err, user) {
     if (err) {
       if (err instanceof AuthError) {
@@ -97,7 +102,7 @@ module.exports.login = function(req, res) {
       ]
     } else {
       if (user) {
-        console.log(user.token);
+
         sendJSONresponse(res, 200, {
           'message': '',
           'status': 1,
@@ -111,4 +116,5 @@ module.exports.login = function(req, res) {
       }
     }
   });
+
 }

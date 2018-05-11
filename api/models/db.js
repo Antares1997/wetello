@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-var dbURI = 'mongodb://Serhii:Serhii@ds247499.mlab.com:47499/wetello'; // 'mongodb://localhost/wetello';
-
+// var dbURI = 'mongodb://Serhii:Serhii@ds247499.mlab.com:47499/wetello';
+var dbURI = 'mongodb://localhost/wetello';
 if (process.env.NODE_ENV === 'production') {
   dbURI = process.env.MONGOLAB_URI;
 }
@@ -48,3 +48,5 @@ process.on('SIGTERM', function() {
 // BRING IN YOUR SCHEMAS & MODELS
 require('./locations');
 require('./users');
+require('./chat');
+require('./attachments');

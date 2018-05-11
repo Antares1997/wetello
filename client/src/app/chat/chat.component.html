@@ -1,0 +1,54 @@
+<app-nav></app-nav>
+
+<div class="generall container">
+  <div class="list-of-users">
+    <ul class="list-group">
+
+      <li class="list-group-item" *ngFor='let itemUser of companions'>
+        <a [routerLink]="['/chat', itemUser._id]">  {{itemUser.username}}</a>
+      </li>
+    </ul>
+  </div>
+  <div class="chat">
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="">
+          {{currenCompanion}}
+        </div>
+      </div>
+
+      <div class="user-window">
+        <div class="chat-window" #test>
+          <ul>
+            <div class="" *ngFor='let chatEl of allChat'>
+              <li *ngIf='chatEl !== undefined'>
+                <app-chat-window [chatEl]='chatEl' [curentUserId]='userId' (delete)='Delete($event)'></app-chat-window>
+              </li>
+            </div>
+
+          </ul>
+        </div>
+      </div>
+      <div class="user-panel">
+        <div class="input-panel">
+          <form class="form" [formGroup]='sendMessageForm' (ngSubmit)='sendMessage()'>
+            <label class="sr-only" for="message">Message</label>
+            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+              <div class="input-group-addon chat-logo"> <img [src]='CHAT' alt=""> </div>
+              <input type="text" autofocus class="form-control" id="message" placeholder="Type a message" autocomplete='off' maxlength='140' [formControl]='sendMessageForm.get("message")' [(ngModel)]='message'>
+              <label for="attachFile" class="attach" title="Attach file"><img [src]=CLIP alt=""></label>
+              <input type="file" id="attachFile" name="" value="" accept="image/*" (change)=fileChange($event) multiple>
+              <button type="submit" class="send" name="button"><img [src]='SEND' alt="">  </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="image-preview">
+      <div class="image-block" *ngFor='let item of previewImages; let i = index'>
+        <img [src]='item' alt="" title="Attached image">
+        <div class="close"><span class="" (click)='removeItem($event, filesId[i])'>x</span> </div>
+      </div>
+    </div>
+  </div>
+</div>

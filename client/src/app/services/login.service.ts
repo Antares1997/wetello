@@ -57,6 +57,12 @@ export class LoginService {
   public getToken() {
     return this.localStorage.getItem<String>('token');
   }
+  public googleLogin(googleToken: any): Observable<USER> {
+    let googleTkn = {
+      googleToken: googleToken
+    }
+    return this.http.post<USER>('http://localhost:3000/api/googleLogin', googleTkn);
+  }
 }
 function setHeaders(token) {
   let headers = new HttpHeaders({

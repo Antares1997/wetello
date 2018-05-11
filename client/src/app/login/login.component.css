@@ -46,3 +46,19 @@
   right: 0px;
   cursor: pointer;
 }
+
+.google img {
+  width: 30px;
+  height: 30px;
+}
+
+.google {
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid #fff;
+}
+
+.google:hover {
+  text-decoration: none;
+  border: 2px solid #0275d8;
+}
