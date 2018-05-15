@@ -23,6 +23,7 @@ export class RegistrationComponent implements OnInit {
     password: '',
     email: ''
   };
+  public errors: any = []
   registrationForm: FormGroup;
   constructor(private registrationService: RegistrationService,
     public messageService: MessageService,
@@ -48,11 +49,15 @@ export class RegistrationComponent implements OnInit {
 
   registration(user: USER): void {
     this.registrationService.registerUser(user)
-      .subscribe(Responseuser => {
+      .subscribe((Responseuser: any) => {
         if (Responseuser) {
-          console.log('here ' + this.registrationService.urlTarget)
-          this.status = this.registrationService.status;
-          this.urlTarget = this.registrationService.urlTarget;
+          if (Responseuser.errors.length > 0) {
+            console.log('test')
+            this.errors = Responseuser.errors[0];
+          } else {
+            console.log('Something bad')
+            this.route.navigateByUrl('/login');
+          }
         } else {
           console.log('Wrong message')
         }

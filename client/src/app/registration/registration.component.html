@@ -1,29 +1,35 @@
 <div class="container">
-  <app-messages [status]='status' [urlTarget]='urlTarget'></app-messages>
+  <!-- <app-messages [status]='status' [urlTarget]='urlTarget'></app-messages> -->
   <div class="registration">
     <div class="input-group">
       <span class="input-group-addon" id="sizing-addon2"> Email</span>
       <input type="text" class="form-control" name='email' placeholder="E-mail" aria-describedby="sizing-addon2" [(ngModel)]="user.email">
     </div>
+    <app-errors-message [error]='errors.email' *ngIf='errors.email'></app-errors-message>
     <div class="input-group">
       <span class="input-group-addon" id="sizing-addon2"> Login</span>
       <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon2" [(ngModel)]="user.username">
     </div>
+    <app-errors-message [error]='errors.username' *ngIf='errors.username'></app-errors-message>
     <div class="input-group">
       <span class="input-group-addon" id="sizing-addon2"> Name</span>
       <input type="text" class="form-control" placeholder="Name" aria-describedby="sizing-addon2" [(ngModel)]="user.name">
     </div>
+    <app-errors-message [error]='errors.name' *ngIf='errors.name'></app-errors-message>
     <div class="input-group">
       <span class="input-group-addon" id="sizing-addon2"> Surname</span>
       <input type="text" class="form-control" placeholder="Surname" aria-describedby="sizing-addon2" [(ngModel)]="user.surname">
     </div>
+    <app-errors-message [error]='errors.surname' *ngIf='errors.surname'></app-errors-message>
     <div class="input-group">
       <span class="input-group-addon" id="sizing-addon2"> Password</span>
       <input type="text" class="form-control" placeholder="Password" aria-describedby="sizing-addon2" [(ngModel)]="user.password">
     </div>
+    <app-errors-message [error]='errors.password' *ngIf='errors.password'></app-errors-message>
     <div class="btn-group">
       <a href="/login">Sign in</a>
-      <button type="button" class="btn btn-exec" (click)='registration(user)' data-toggle="modal" data-target="#reginModal">Sign up</button>
+      <button type="button" class="btn btn-exec" (click)='registration(user)'>Sign up</button>
+      <!-- data-toggle="modal" data-target="#reginModal" -->
     </div>
   </div>
 </div>

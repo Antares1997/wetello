@@ -63,33 +63,33 @@ export class SocketService {
 
   public sendFile(formData: any) {
     console.log('testing')
-    return this.http.post('http://localhost:3000/api/saveAttachment', formData, { headers: setHeaders(this.token) })
+    return this.http.post('/api/saveAttachment', formData, { headers: setHeaders(this.token) })
       .map((res: any) => res.filesId)
   }
   public removeFile(id) {
     var toServer = {
       id: id
     }
-    return this.http.post('http://localhost:3000/api/removeAttachment', toServer, { headers: setHeaders(this.token) })
+    return this.http.post('/api/removeAttachment', toServer, { headers: setHeaders(this.token) })
   }
 
   public getChat(token): Observable<any> {
-    return this.http.get('http://localhost:3000/api/chat', { headers: setHeaders(token) });
+    return this.http.get('/api/chat', { headers: setHeaders(token) });
   }
   public getPrivateChat(token, id): Observable<any> {
-    return this.http.get('http://localhost:3000/api/chat/' + id, { headers: setHeaders(token) });
+    return this.http.get('/api/chat/' + id, { headers: setHeaders(token) });
   }
   public deleteMessage(id) {
     let toServer = {
       messageId: id
     }
-    return this.http.post('http://localhost:3000/api/chat/deleteMessage', toServer, { headers: setHeaders(this.token) }).map((res: any) => res.messageId)
+    return this.http.post('/api/chat/deleteMessage', toServer, { headers: setHeaders(this.token) }).map((res: any) => res.messageId)
   }
   public deleteMessageForBoth(id) {
     let toServer = {
       messageId: id
     }
-    return this.http.post('http://localhost:3000/api/chat/deleteMessageForBoth', toServer, { headers: setHeaders(this.token) }).map((res: any) => res.messageId)
+    return this.http.post('/api/chat/deleteMessageForBoth', toServer, { headers: setHeaders(this.token) }).map((res: any) => res.messageId)
   }
 
 }

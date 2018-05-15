@@ -25,12 +25,10 @@ export class RegistrationService {
     console.log('Registration!');
   }
   registerUser(user: USER): Observable<USER> {
-    return this.http.post<USER>('http://localhost:3000/api/registration', user, httpOptions).pipe(
+    return this.http.post<USER>('/api/registration', user, httpOptions).pipe(
       tap((response: any) => {
         if (response.errors) {
-          response.errors.map(err => {
-            this.messageService.add(err.msg);
-          })
+          return 0;
         } else {
           this.localStorage.setItem('token', response.headerToken).subscribe(() => { });
           this.status = Number(response.status);

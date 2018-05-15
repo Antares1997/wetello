@@ -172,17 +172,41 @@ module.exports.deleteMessage = function(req, res) {
 module.exports.deleteMessageForBoth = function(req, res) {
   var messageId = req.body.messageId;
   console.log('messageId', messageId);
+  // chatDB
+  //   .findAndModify({
+  //       query: {
+  //         _id: messageId
+  //       },
+  //       remove: true,
+  //       new: false
+  //     },
+  //     (err, msg) => {
+  //       if (err) throw err;
+  //       console.log('msg', msg);
+  //       res.json({
+  //         'removedStatus': 'removed',
+  //         'messageId': messageId
+  //       })
+  //     }
+  //   )
   chatDB
-    .remove({
+    .findOne({
       _id: messageId
     })
-    .exec((err, suc) => {
+    .populate('attachedFiles')
+    .exec((err, msg) => {
       if (err) throw err;
-      res.json({
-        'removedStatus': 'removed',
-        'messageId': messageId
-      })
+      if (msg) {
+        console.log('msg', msg);
+        // chatDB.remove(msg, (err, success) => {
+        //   if (err) throw err;
+        //   if (success) {
+        //
+        //   }
+        // })
+      }
     })
+
 }
 var connection = [];
 module.exports.ctrlIo = function(socket) {

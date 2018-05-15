@@ -3,7 +3,7 @@ var UserModel = mongoose.model('user');
 
 mongoose.Promise = global.Promise;
 mongoose.set('debug', true);
-var chatShema = new mongoose.Schema({
+var ChatShema = new mongoose.Schema({
   message: {
     type: String,
     default: ''
@@ -30,7 +30,7 @@ var chatShema = new mongoose.Schema({
     default: 'none'
   }
 });
-var attachmentSchema = new mongoose.Schema({
+var AttachmentSchema = new mongoose.Schema({
   type: String,
   filepath: String,
   filename: String,
@@ -44,5 +44,5 @@ var attachmentSchema = new mongoose.Schema({
     default: false
   }
 });
-var Attach = mongoose.model('attachment', attachmentSchema, 'attachments');
-var Chat = mongoose.model('chat', chatShema, 'chats');
+var Attach = mongoose.model('attachment', AttachmentSchema, 'attachments');
+var Chat = mongoose.model('chat', ChatShema, 'chats');

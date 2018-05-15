@@ -55,6 +55,7 @@ import { ChatComponent } from './chat/chat.component';
 import { ChatWindowComponent } from './chat/chat-window/chat-window.component';
 import { SocketService } from './chat/services/socket.service';
 import { ContextmenuComponent } from './contextmenu/contextmenu.component';
+import { ErrorsMessageComponent } from './errors-message/errors-message.component';
 
 // import { GoogleSignInComponent } from 'angular-google-signin';
 export function getAuthServiceConfigs() {
@@ -89,6 +90,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ChatComponent,
     ChatWindowComponent,
     ContextmenuComponent,
+    ErrorsMessageComponent,
     // GoogleSignInComponent
   ],
   imports: [

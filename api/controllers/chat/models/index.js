@@ -144,7 +144,6 @@ var checkUpdates = function(chatInfo, cb) {
       .exec((err, data) => {
         if (err) throw err;
         if (data) {
-          console.log('daasdasdasdta', data);
           var allMessage = data;
           var DBlength = data.length;
           var resMessage = allMessage.slice(chatInfo.length);

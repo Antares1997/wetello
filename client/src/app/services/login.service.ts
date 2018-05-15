@@ -27,7 +27,7 @@ export class LoginService {
     protected localStorage: AsyncLocalStorage
   ) { }
   loginUser(user: USER): Observable<USER> {
-    return this.http.post<USER>('http://localhost:3000/api/login', user, httpOptions).pipe(
+    return this.http.post<USER>('/api/login', user, httpOptions).pipe(
       tap((response: any) => {
         this.responseMessage = response.message;
         if (response.status !== 1) {
@@ -52,7 +52,7 @@ export class LoginService {
   //   });
   // }
   getUser(token) {
-    return this.http.get('http://localhost:3000/api/getUser', { headers: setHeaders(token) });
+    return this.http.get('/api/getUser', { headers: setHeaders(token) });
   }
   public getToken() {
     return this.localStorage.getItem<String>('token');
@@ -61,7 +61,7 @@ export class LoginService {
     let googleTkn = {
       googleToken: googleToken
     }
-    return this.http.post<USER>('http://localhost:3000/api/googleLogin', googleTkn);
+    return this.http.post<USER>('/api/googleLogin', googleTkn);
   }
 }
 function setHeaders(token) {

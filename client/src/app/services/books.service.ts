@@ -38,35 +38,35 @@ export class GetbooksService {
     return this.localStorage.getItem<String>('token');
   }
   public getAll(token): Observable<any> {
-    return this.http.get<BOOKS[]>('http://localhost:3000/api/bookslist', { headers: setHeaders(token) })
+    return this.http.get<BOOKS[]>('/api/bookslist', { headers: setHeaders(token) })
 
   }
 
   public findBook(key_word: String, token): any {
     this.request_key = { key_word: key_word };
-    return this.http.post<BOOKS[]>('http://localhost:3000/api/searchBook', this.request_key, { headers: setHeaders(token) })
+    return this.http.post<BOOKS[]>('/api/searchBook', this.request_key, { headers: setHeaders(token) })
     // .map(response => response.searched_books);
   }
   saveBook(token, book): Observable<any> {
-    return this.http.post<BOOKS>('http://localhost:3000/api/addbook', book, { headers: setHeaders(token) });
+    return this.http.post<BOOKS>('/api/addbook', book, { headers: setHeaders(token) });
   }
   editBook(token, book): any {
-    return this.http.put('http://localhost:3000/api/editbook', book, { headers: setHeaders(token) });
+    return this.http.put('/api/editbook', book, { headers: setHeaders(token) });
   }
   getDownloadBookUrl(book): string {
-    return 'http://localhost:3000/api/sendFile?bookId=' + book;
+    return '/api/sendFile?bookId=' + book;
   }
   setRating(token, rating): any {
-    return this.http.put('http://localhost:3000/api/setRating', rating, { headers: setHeaders(token) });
+    return this.http.put('/api/setRating', rating, { headers: setHeaders(token) });
   }
   setReadStatus(token, readStatus): any {
-    return this.http.put('http://localhost:3000/api/setReadStatus', readStatus, { headers: setHeaders(token) });
+    return this.http.put('/api/setReadStatus', readStatus, { headers: setHeaders(token) });
   }
   getInfo(token, id): Observable<any> {
-    return this.http.get<BOOKS>('http://localhost:3000/api/getInfo?bookId=' + id, { headers: setHeaders(token) });
+    return this.http.get<BOOKS>('/api/getInfo?bookId=' + id, { headers: setHeaders(token) });
   }
   deleteBook(token, bookId): Observable<any> {
-    return this.http.post<BOOKS>('http://localhost:3000/api/deleteBook', bookId, { headers: setHeaders(token) });
+    return this.http.post<BOOKS>('/api/deleteBook', bookId, { headers: setHeaders(token) });
   }
   log(message: string) {
     this.messageService.add(message);

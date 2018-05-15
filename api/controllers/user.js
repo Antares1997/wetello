@@ -23,57 +23,57 @@ var sendJSONresponse = function(res, status, content) {
   res.json(content);
 };
 module.exports.registration = function(req, res) {
-  console.log('body', req.body);
   let username = req.body.username,
     name = req.body.name,
     surname = req.body.surname,
     password = req.body.password,
     email = req.body.email,
     googleId = req.body.googleId || false;
-  req.checkBody('email', 'Email filed is required!').notEmpty();
-  req.checkBody('email', 'Email is valid!').isEmail();
-  req.check('name', 'Name filed is required!').notEmpty();
-  req.checkBody('surname', 'Email filed is required!').notEmpty();
-  req.checkBody('username', 'Username filed is required!').notEmpty();
-  req.checkBody('password', 'Password filed is required!').notEmpty();
-  var errors = req.validationErrors();
-  if (errors) {
-    sendJSONresponse(res, 200, {
-      'message': 'errors',
-      'status': 0,
-      errors: errors
-    })
-    console.log(errors);
-    errors = [];
-    return;
-  } else {
-    User.registration(username, name, surname, password, email, googleId, function(err, user) {
-      if (err) {
-        if (err instanceof AuthError) {
-          sendJSONresponse(res, 200, {
-            'message': err.message,
-            'status': 0
-          });
-        } else {
-          console.log(err);
-          sendJSONresponse(res, 200, {
-            'message': 'Sorry, there was an unknown error.',
-            'status': 0
-          })
-        }
-      } else {
-        confirmnumber = randomChars.get(8);
-        sendMessage(confirmnumber, req.body.email);
-        console.log('user.token', user.token);
+  // req.checkBody('email', 'Email filed is required!').notEmpty();
+  // req.checkBody('email', 'Email is valid!').isEmail();
+  // req.check('name', 'Name filed is required!').notEmpty();
+  // req.checkBody('surname', 'Email filed is required!').notEmpty();
+  // req.checkBody('username', 'Username filed is required!').notEmpty();
+  // req.checkBody('password', 'Password filed is required!').notEmpty();
+  // var errors = req.validationErrors();
+  // if (errors) {
+  //   sendJSONresponse(res, 200, {
+  //     'message': 'errors',
+  //     'status': 0,
+  //     errors: errors
+  //   })
+  //   console.log(errors);
+  //   errors = [];
+  //   return;
+  // } else {
+  // User.registration(req.body, function (err, createdUser) {})
+  User.registration(username, name, surname, password, email, googleId, function(err, user) {
+    if (err) {
+      if (err instanceof AuthError) {
+        console.log('AuthError', AuthError);
         sendJSONresponse(res, 200, {
-          'message': 'A test message has been sent to your mail, and your account has been successfully created!',
-          'status': 1,
-          'headerToken': user.token
+          'message': err.message,
+          'status': 0
+        });
+      } else {
+        sendJSONresponse(res, 206, {
+          errors: err,
+          'status': 0
         })
-        return;
       }
-    });
-  }
+    } else {
+      confirmnumber = randomChars.get(8);
+      // sendMessage(confirmnumber, req.body.email);
+      sendJSONresponse(res, 200, {
+        errors: '',
+        'message': 'A test message has been sent to your mail, and your account has been successfully created!',
+        'status': 1,
+        'headerToken': user.token
+      })
+      return;
+    }
+  });
+  // }
 
 };
 
