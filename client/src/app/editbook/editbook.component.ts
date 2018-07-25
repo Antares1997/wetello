@@ -66,7 +66,7 @@ export class EditbookComponent implements OnInit {
       'author': ['', Validators.required],
       'title': ['', Validators.required],
       'review': ['', Validators.required],
-      'readStatus': [0, Validators.required]
+      'readStatus': ['', Validators.required]
     });
   }
   ngOnInit() {
@@ -78,41 +78,54 @@ export class EditbookComponent implements OnInit {
     let formModel = this.addBookForm.value;
     let bookInfo = Object.keys(formModel);
 
-    const formData = new FormData();
+
     if (this.selectedBook) {
-      for (let j = 0; j < bookInfo.length; j++) {
-        if ((formModel[bookInfo[j]] === '') && this.files == null) {
-          return this.message = 'Fill all fields correctly!';
-        } else continue;
-      }
-      formData.append('_id', this.selectedBook._id);
-      for (var i = 0; i < bookInfo.length; i++) {
-        formData.append(bookInfo[i], formModel[bookInfo[i]]);
-      }
-      final_data = formData;
-      this.getbooksService.editBook(this.token, final_data).subscribe((res: any) => {
-        this.message = res.message;
-      })
-      this.getbooksService.getAll(this.token).subscribe((res: any) => {
-        this.books = res.books;
-      });
-      this.Reset(bookInfo);
+      formModel['_id'] = this.selectedBook._id;
+    } else if (this.bookId) {
+      formModel['_id'] = this.bookId;
     }
-    else if (this.bookId) {
-      formData.append('_id', this.bookId);
-      for (var i = 0; i < bookInfo.length; i++) {
-        formData.append(bookInfo[i], formModel[bookInfo[i]]);
-      }
-      final_data = formData;
-      this.getbooksService.editBook(this.token, final_data).subscribe((res: any) => {
-        this.message = res.message;
-      })
-      this.getbooksService.getAll(this.token).subscribe((res: any) => {
-        this.books = res.books;
-      });
-      this.Reset(bookInfo);
-    }
+    this.getbooksService.editBook(this.token, formModel).subscribe((res: any) => {
+      // this.message = res.message;
+      console.log('res', res)
+    })
+    //   this.getbooksService.getAll(this.token).subscribe((res: any) => {
+    //     this.books = res.books;
+    //   });
   }
+
+  // if (this.selectedBook) {  //delete this peace of shit
+  //   for (let j = 0; j < bookInfo.length; j++) {
+  //     if ((formModel[bookInfo[j]] === '') && this.files == null) {
+  //       return this.message = 'Fill all fields correctly!';
+  //     } else continue;
+  //   }
+  //   formData.append('_id', this.selectedBook._id);
+  //   for (var i = 0; i < bookInfo.length; i++) {
+  //     formData.append(bookInfo[i], formModel[bookInfo[i]]);
+  //   }
+  //   final_data = formData;
+  //   this.getbooksService.editBook(this.token, final_data).subscribe((res: any) => {
+  //     this.message = res.message;
+  //   })
+  //   this.getbooksService.getAll(this.token).subscribe((res: any) => {
+  //     this.books = res.books;
+  //   });
+  //   this.Reset(bookInfo);
+  // }
+  // else if (this.bookId) {
+  //   formData.append('_id', this.bookId);
+  //   for (var i = 0; i < bookInfo.length; i++) {
+  //     formData.append(bookInfo[i], formModel[bookInfo[i]]);
+  //   }
+  //   final_data = formData;
+  //   this.getbooksService.editBook(this.token, final_data).subscribe((res: any) => {
+  //     this.message = res.message;
+  //   })
+  //   this.getbooksService.getAll(this.token).subscribe((res: any) => {
+  //     this.books = res.books;
+  //   });
+  //   this.Reset(bookInfo);
+  // }
 
   Reset(bookInfo) {
     // this.selectedBook = null;

@@ -11,7 +11,7 @@ import 'rxjs/add/operator/map';
 import { MessageService } from '../services/message.service';
 import { AsyncLocalStorage } from 'angular-async-local-storage';
 // import {'rxjs/add/operator/map'};
-
+const port = 'http://localhost:3000';
 export interface IRequestOptions {
   body?: any;
   headers?: HttpHeaders | { [header: string]: string | Array<string> };
@@ -47,8 +47,11 @@ export class GetbooksService {
     return this.http.post<BOOKS[]>('/api/searchBook', this.request_key, { headers: setHeaders(token) })
     // .map(response => response.searched_books);
   }
-  saveBook(token, book): Observable<any> {
+  addBook(token, book): Observable<any> {
     return this.http.post<BOOKS>('/api/addbook', book, { headers: setHeaders(token) });
+  }
+  saveBook(token, book): Observable<any> {
+    return this.http.post<BOOKS>('/api/saveBook', book, { headers: setHeaders(token) });
   }
   editBook(token, book): any {
     return this.http.put('/api/editbook', book, { headers: setHeaders(token) });
@@ -60,6 +63,7 @@ export class GetbooksService {
     return this.http.put('/api/setRating', rating, { headers: setHeaders(token) });
   }
   setReadStatus(token, readStatus): any {
+    console.log('readStatus', readStatus)
     return this.http.put('/api/setReadStatus', readStatus, { headers: setHeaders(token) });
   }
   getInfo(token, id): Observable<any> {

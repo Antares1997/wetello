@@ -46,7 +46,7 @@ process.on('SIGTERM', function() {
 });
 
 // BRING IN YOUR SCHEMAS & MODELS
-require('./locations');
 require('./users');
+require('./locations');
 require('./chat');
 require('./attachments');

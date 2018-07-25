@@ -67,7 +67,6 @@ module.exports.getBooksList = function(req, res) {
                     console.log('bad');
                   }
                 }
-                console.log('sendBooks', sendBooks);
                 return sendJSONresponse(res, 200, {
                   books: sendBooks
                 });
@@ -171,22 +170,22 @@ module.exports.deleteBookStatus = function(req, res) {
   }
 };
 
-module.exports.addbook = function(req, res) {
-  verifyInp(req.token, 'secret');
-  res.render('index', {
-    title: 'addbook'
-  });
-};
-module.exports.editbook = function(req, res) {
-  verifyInp(req.token, 'secret');
-  res.render('index', {
-    title: 'editbook'
-  });
-};
-
-module.exports.deletebook = function(req, res) {
-  verifyInp(req.token, 'secret');
-  res.render('index', {
-    title: 'deletebook'
-  });
-};
+// module.exports.addbook = function(req, res) {
+//   verifyInp(req.token, 'secret');
+//   res.render('index', {
+//     title: 'addbook'
+//   });
+// };
+// module.exports.editbook = function(req, res) {
+//   verifyInp(req.token, 'secret');
+//   res.render('index', {
+//     title: 'editbook'
+//   });
+// };
+//
+// module.exports.deletebook = function(req, res) {
+//   verifyInp(req.token, 'secret');
+//   res.render('index', {
+//     title: 'deletebook'
+//   });
+// };

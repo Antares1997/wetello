@@ -24,13 +24,15 @@ export class AddbookComponent implements OnInit {
   typeFile: String;
   sizeFile: number = 20000000;
   uploadStatus: boolean = true;
+  public errors: any = []
   public WAIT = require("../assets/PLSWAIT.gif");
+  private bookId: String = null;
   constructor(
     private fb: FormBuilder,
     public el: ElementRef,
     private getbooksService: GetbooksService,
     private router: Router,
-    private loginService: LoginService,
+    private loginService: LoginService
   ) {
     this.loginService.getToken().subscribe((token) => {
       if (!token) {
@@ -43,7 +45,7 @@ export class AddbookComponent implements OnInit {
       'author': ['', Validators.required],
       'title': ['', Validators.required],
       'review': ['', Validators.required],
-      readStatus: ['Select', Validators.required]
+      'readStatus': [0, Validators.required]
 
     });
     this.typesOfFiles = ['application/msword', 'application/pdf', 'text/plain', 'image/vnd.djvu'];
@@ -55,60 +57,41 @@ export class AddbookComponent implements OnInit {
   onFileChange(event) {
     this.uploadStatus = true;
     const reader = new FileReader();
-    if (event.target.files && event.target.files.length > 0) {
-      let file = <File>event.target.files[0];
-      this.uploadStatusText = 'Selected file: ' + file.name;
-      reader.readAsDataURL(file);
-      console.log(file.size, this.sizeFile);
-      if (!checkTypesOfBook(file, this.typesOfFiles)) {
-        this.files = null;
-        this.uploadStatusText = 'Invalid file format!';
-        this.uploadStatus = false;
-      } else if (!checkSizesOfBook(file, this.sizeFile)) {
-        this.files = null;
-        this.uploadStatusText = 'Too large file size (>' + this.sizeFile / 1000000 + 'mb)';
-        this.uploadStatus = false;
+    var file = event.target.files[0];
+    console.log('file', file);
+    var formData: FormData = new FormData();
+    formData.append('file', file);
+    this.uploadStatusText = file.name;
+    this.getbooksService.saveBook(this.token, formData).subscribe((response: any) => {
+      console.log('test', response)
+      if (response.errors) {
+        console.log('response', response.errors)
+        this.errors = response.errors[0];
       } else {
-        // return this.message = 'Недопустимий формат файлу!';
-        this.files = file;
+        this.errors = ['']
+        this.bookId = response.bookId;
+        console.log('response', response.bookId)
       }
 
-    }
-  }
-  onSubmit() {
-    console.log('this.message', this.message)
-    // if (!this.message) {
-    let final_data;
-    const formModel = this.addBookForm.value;
-    console.log(formModel);
-    var bookInfo = Object.keys(formModel);
-    for (let j = 0; j < bookInfo.length; j++) {
-      if ((formModel[bookInfo[j]] === '') && this.files == null) {
-        return this.message = 'Fill all fields correctly!';
-      } else continue;
-    }
-    let files = this.files;
-    const formData = new FormData();
-    for (var i = 0; i < bookInfo.length; i++) {
-      formData.append(bookInfo[i], formModel[bookInfo[i]]);
-    }
-    formData.append('file', files);
-    final_data = formData;
-    this.loading = true;
-    this.getbooksService.saveBook(this.token, formData).subscribe((res: any) => {
-      if (res.message) {
-        this.message = null;
-        this.message = res.message;
-      }
-    });
+    })
     setTimeout(() => {
       this.loading = false;
     }, 1000);
+  }
+  onSubmit() {
+    const formModel = this.addBookForm.value;
+    var bookInfo = Object.keys(formModel);
+    formModel['bookId'] = this.bookId;
+    console.log('values', formModel)
+    this.getbooksService.addBook(this.token, formModel).subscribe((res: any) => {
+      if (res.errors) {
+        this.errors = res.errors[0];
+        this.message = res.message;
+      } else if (res.message) {
+        this.message = res.message;
+      }
 
-    // }
-    this.Reset(bookInfo)
-    // }
-    // this.Reset(bookInfo)
+    })
   }
   Reset(bookInfo) {
     if (this.addBookForm.get('sourceBook')) {
@@ -130,6 +113,9 @@ export class AddbookComponent implements OnInit {
     //   this.message = null;
     // }
 
+  }
+  public removeErr(errorName) {
+    this.errors[errorName] = '';
   }
 
 }

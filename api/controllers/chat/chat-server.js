@@ -172,42 +172,30 @@ module.exports.deleteMessage = function(req, res) {
 module.exports.deleteMessageForBoth = function(req, res) {
   var messageId = req.body.messageId;
   console.log('messageId', messageId);
-  // chatDB
-  //   .findAndModify({
-  //       query: {
-  //         _id: messageId
-  //       },
-  //       remove: true,
-  //       new: false
-  //     },
-  //     (err, msg) => {
-  //       if (err) throw err;
-  //       console.log('msg', msg);
-  //       res.json({
-  //         'removedStatus': 'removed',
-  //         'messageId': messageId
-  //       })
-  //     }
-  //   )
   chatDB
-    .findOne({
-      _id: messageId
-    })
+    .findById(messageId)
     .populate('attachedFiles')
-    .exec((err, msg) => {
+    .exec((err, data) => {
       if (err) throw err;
-      if (msg) {
-        console.log('msg', msg);
-        // chatDB.remove(msg, (err, success) => {
-        //   if (err) throw err;
-        //   if (success) {
-        //
-        //   }
-        // })
+      if (data) {
+        if (data.attachedFiles.length > 0) {
+          console.log('data.attachedFiles.filepath', data.attachedFiles.filepath);
+          data.attachedFiles.forEach((item, i) => {
+            fs.unlink(item.filepath, (err) => {
+              if (err) throw err;
+            })
+          })
+        }
+        data.attachedFiles.remove();
+        data.remove();
+        res.json({
+          'removedStatus': 'removed',
+          'messageId': messageId
+        })
       }
     })
-
 }
+
 var connection = [];
 module.exports.ctrlIo = function(socket) {
   connection.push(socket);

@@ -7,15 +7,19 @@
     <div class="form-group">
       <label for="exampleInputFile" class="file" id="samplefile" [ngStyle]="{'color':uploadStatus ? '#0080ff'	 : '#ff0040'}">{{uploadStatusText}}</label>
       <input type="file" id="exampleInputFile" name="file" (change)="onFileChange($event)">
+      <app-errors-message [error]='errors.url' *ngIf='errors.url'> </app-errors-message>
+      <app-errors-message [error]='errors.type' *ngIf='errors.type'> </app-errors-message>
       <!-- <p class="help-block">Example block-level help text here.</p> -->
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1"></label>
-      <input type="text" class="form-control" id="author" placeholder="author" [formControl]='addBookForm.get("author")' [(ngModel)]='author'>
+      <input type="text" class="form-control" id="author" placeholder="author" [formControl]='addBookForm.get("author")' [(ngModel)]='author' (keyup)='removeErr("author")'>
+      <app-errors-message [error]='errors.author' *ngIf='errors.author'> </app-errors-message>
     </div>
     <div class="form-group">
       <label for="title"></label>
-      <input type="text" class="form-control" id="title" placeholder="title" [formControl]='addBookForm.get("title")' [(ngModel)]='title'>
+      <input type="text" class="form-control" id="title" placeholder="title" [formControl]='addBookForm.get("title")' [(ngModel)]='title' (keyup)='removeErr("title")'>
+      <app-errors-message [error]='errors.title' *ngIf='errors.title'> </app-errors-message>
     </div>
     <div class="form-group">
       <label for="review"></label>
@@ -25,10 +29,11 @@
 
       <div class="btn-group">
         <select class="selectStatus custom-select mr-sm-2" id="inlineFormCustomSelect" [formControl]='addBookForm.controls["readStatus"]'>
-            <option selected disabled style="display: none">Select</option>
-            <option value="1">On</option>
-            <option value="0">Off</option>
+            <option selected disabled style="display: none" value="0">Select</option>
+            <option value="true">On</option>
+            <option value="false">Off</option>
           </select>
+        <app-errors-message [error]='errors.status' *ngIf='errors.status'> </app-errors-message>
       </div>
       <div class="btn-group btns">
         <button type="reset" name="button" (click)='Reset()'>Cancel</button>

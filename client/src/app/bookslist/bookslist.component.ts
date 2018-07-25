@@ -53,7 +53,7 @@ export class BookslistComponent implements OnInit {
           this.getbooksService.getAll(token).subscribe((books) => {
             let temp = 0;
             this.books = books.books;
-            console.log(this.books, token);
+            console.log('books', books);
             addPosition(this);
             this.dataSource = new MatTableDataSource<BOOKS>(this.books);
             this.dataSource.paginator = this.paginator;

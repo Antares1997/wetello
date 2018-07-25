@@ -1,11 +1,14 @@
 var mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectID;
-var Loc = mongoose.model('book');
+var BooksShema = mongoose.model('book');
+var AttachedBook = mongoose.model('AttachedBook');
 var User = mongoose.model('user');
 var jwt = require('../models/users').jwt;
 var multer = require('multer');
 var Busboy = require('busboy');
 var path = require('path');
+var md5 = require('md5');
+var randomChars = require('random-chars');
 const storage = multer.diskStorage({
   destination: './uploads',
   filename: function(req, file, cb) {
@@ -38,57 +41,144 @@ function verifyInp(token, secret, res) {
 }
 
 module.exports.addBook = function(req, res) {
-  var bookToSave = [],
-    saveTo = '',
-    ext = '';
   if (verifyInp(req.token, 'secret', res)) {
+    console.log('req.body', req.body);
+    var monthes = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var date = new Date();
+    var month = date.getMonth();
+    var day = date.getDate();
+    var year = date.getFullYear();
+    var downloadedOn = day + ', ' + monthes[month] + ' ' + year;
+    var errors = [];
+    var errorObj = {};
+
+    User
+      .findOne({
+        'token': req.token
+      }, (err, user) => {
+        if (err) throw err;
+        AttachedBook
+          .findById(req.body.bookId, (err, attachedBook) => {
+            if (err) throw err;
+            if (attachedBook) {
+              AttachedBook
+                .updateOne({
+                  '_id': ObjectId(attachedBook._id)
+                }, {
+                  $set: {
+                    isUsed: true
+                  }
+                }, (err) => {
+                  if (err) throw err;
+                })
+              var downloader_info = {
+                name: user.name,
+                surname: user.surname,
+                downloadedOn: downloadedOn
+              };
+              var newBook = new BooksShema({
+                author: req.body.author,
+                title: req.body.title,
+                rating: 0,
+                status: req.body.status,
+                attachedBook: attachedBook._id,
+                review: req.body.review,
+                downloader_Id: user._id,
+                info: downloader_info
+              });
+              newBook
+                .save((err, data) => {
+                  if (err) {
+                    if (err.code === 11000) {
+                      console.log('err.errors', err);
+                      // errorObj['duplicate'] = 'duplicate';
+                    } else {
+                      Object.keys(err.errors).forEach((errorName, index) => {
+                        errorObj[errorName] = err.errors[errorName].message;
+                      })
+                    }
+                    errors.push(errorObj);
+                    sendJSONresponse(res, 206, {
+                      errors: errors,
+                      'message': 'Сheck the fields'
+                    })
+                  } else {
+                    sendJSONresponse(res, 200, {
+                      'message': 'Book was succsesfully add!'
+                    })
+                  }
+                })
+            } else {
+              errorObj['url'] = 'Not found attch file';
+              errors.push(errorObj);
+              sendJSONresponse(res, 200, {
+                errors: errors,
+                'message': errorObj['url']
+
+              })
+            }
+          })
+      })
+  }
+};
+
+module.exports.saveBook = function(req, res) {
+  if (verifyInp(req.token, 'secret', res)) {
+    var errors = [];
+    var errorObj = {};
     var busboy = new Busboy({
       headers: req.headers
     });
-
-
-    // parseReq(req);
-    let downloader_info, Save_options;
-    User
-      .findOne({
-        "token": req.token
-      })
-      .exec(function(err, user) {
-        if (err) throw err;
-        if (user) {
-          busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
-            bookToSave[fieldname] = val;
+    var bookId;
+    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+      User.findOne({
+          'token': req.token
+        })
+        .exec((err, user) => {
+          var folder = './uploads/' + user._id + '/';
+          var attachBook = new AttachedBook({
+            filepath: folder + md5(randomChars.get(20)),
+            filename: filename,
+            type: mimetype,
+            owner: user._id
           });
-          busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-            ext = '.' + filename.split('.').reverse()[0];
-            var folder = './uploads/' + user._id;
-            saveTo = path.join(folder, bookToSave['author'] + '__' + bookToSave['title'] + ext);
-            if (!fs.existsSync(saveTo)) {
-              mkdirp(folder, function(err) {
-                if (err) throw err;
-                file.pipe(fs.createWriteStream(saveTo));
-              });
+          attachBook.save((err, data) => {
+            if (err) {
+              Object.keys(err.errors).forEach((errorName, index) => {
+                errorObj[errorName] = err.errors[errorName].message;
+                console.log(errorObj);
+              })
+              errors.push(errorObj);
+              return sendJSONresponse(res, 206, {
+                errors: errors
+              })
             } else {
-              return sendJSONresponse(res, 200, {
-                'message': `Book (s) with this title and the author exists!`
-              });
+              if (fs.existsSync(folder)) {
+                file.pipe(fs.createWriteStream(attachBook.filepath));
+              } else {
+                mkdirp(folder, (err) => {
+                  if (err) throw err;
+                  file.pipe(fs.createWriteStream(attachBook.filepath));
+                });
+              }
+              bookId = data._id;
             }
-          });
-          busboy.on('finish', function() {
-            saveFunc(req, res, user, bookToSave, saveTo);
-          });
-          return req.pipe(busboy);
-        }
-      });
-  } else {
-    return sendJSONresponse(res, 200, {
-      "message": "Pls, login"
+          })
+        });
     });
+    busboy.on('finish', function() {
+      // if (errors.length > 0) {
+      //   return sendJSONresponse(res, 206, {
+      //     errors: errors
+      //   })
+      // }
+      return sendJSONresponse(res, 200, {
+        'bookId': bookId
+      })
+    });
+    return req.pipe(busboy);
   }
-
-};
-
-
+}
 
 module.exports.editbook = function(req, res) {
   var bookToSave = [];
@@ -100,16 +190,18 @@ module.exports.editbook = function(req, res) {
       .exec(function(err, user) {
         if (err) throw err;
         if (user) {
-          var busboy = new Busboy({
-            headers: req.headers
-          });
-          busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
-            bookToSave[fieldname] = val;
-          });
-          busboy.on('finish', function() {
-            editFunc(req, res, user, bookToSave);
-          });
-          return req.pipe(busboy);
+          editFunc(req.body, (err, books) => {
+            if (err) {
+              sendJSONresponse(res, 206, {
+                errors: err
+              })
+            };
+            if (books) {
+              sendJSONresponse(res, 200, {
+                books: books
+              })
+            }
+          })
         } else {
           return sendJSONresponse(res, 200, {
             "message": "Pls, login"
@@ -121,7 +213,7 @@ module.exports.editbook = function(req, res) {
 module.exports.deleteBook = function(req, res) {
   let bookId;
   if (verifyInp(req.token, 'secret', res)) {
-    // var bookId = req.params.id;
+    console.log('deleteBook');
     User
       .findOne({
         token: req.token
@@ -130,9 +222,11 @@ module.exports.deleteBook = function(req, res) {
         if (err) throw err;
         if (user) {
           bookId = req.body.bookId;
-          deleteBookLocal(res, bookId);
-          return sendJSONresponse(res, 200, {
-            "message": "Ok"
+          console.log('bookId', bookId);
+          deleteBookFromDb(bookId, (result) => {
+            return sendJSONresponse(res, 200, {
+              "message": "Ok"
+            });
           });
         } else {
           return sendJSONresponse(res, 200, {
@@ -144,28 +238,23 @@ module.exports.deleteBook = function(req, res) {
   }
 }
 
-
 module.exports.sendFile = function(req, res) {
   //return fs.createReadStream(path.resolve('uploads/5abfbcb317d42e0bcb89d3fc/qwe.jpg')).pipe(res);
   var bookId = req.query.bookId;
-  Loc
+  BooksShema
     .findById(bookId)
+    .populate('attachedBook')
     .exec(function(err, data) {
-      if (err) throw err;
+      if (err) {
+        return sendJSONresponse(res, 404, {
+          "message": "Not found file!"
+        });
+      };
+
       if (data) {
-        var stream = fs.createReadStream(path.resolve(data.url));
-        stream.pipe(res);
-        // stream.on('readable', function() {
-        //   var book = stream.read();
-        //   if(book ==)
-        //   console.log('book', book);
-        //   // res.send(data)
-        // });
-        // stream.on('end', function() {
-        //   console.log("THE END");
-        //   var data = stream.read();
-        //   console.log('data', data);
-        // });
+        // res.setHeader(`Content-Disposition: attachment; filename='${data.title}'`)
+        var stream = fs.createReadStream(path.resolve(data.attachedBook.filepath));
+        res.download(data.attachedBook.filepath, data.title);
       } else {
         console.log('Not found');
       }
@@ -177,7 +266,7 @@ module.exports.sendFile = function(req, res) {
 
 module.exports.setRating = function(req, res) {
   if (verifyInp(req.token, 'secret', res)) {
-    Loc
+    BooksShema
       .update({
         _id: req.body.id
       }, {
@@ -194,10 +283,9 @@ module.exports.setRating = function(req, res) {
   }
 }
 
-
 module.exports.setReadStatus = function(req, res) {
   if (verifyInp(req.token, 'secret', res)) {
-    Loc
+    BooksShema
       .update({
         _id: req.body.id
       }, {
@@ -216,7 +304,7 @@ module.exports.setReadStatus = function(req, res) {
 module.exports.getInfo = function(req, res) {
   if (verifyInp(req.token, 'secret', res)) {
     var bookId = req.query.bookId;
-    Loc
+    BooksShema
       .findById(bookId)
       // .select('_id rating')
       .exec((err, data) => {
@@ -236,216 +324,79 @@ module.exports.getInfo = function(req, res) {
   }
 }
 
+function editFunc(bookInfo, cb) {
 
-
-function saveFunc(req, res, user, bookToSave, saveTo) {
-  var monthes = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  var date = new Date();
-  var month = date.getMonth();
-  var day = date.getDate();
-  var year = date.getFullYear();
-  var downloadedOn = day + ', ' + monthes[month] + ' ' + year;
-  if (!saveTo) {
-    return sendJSONresponse(res, 200, {
-      'message': `Fill all the fields correctly!`
-    });;
-  }
-  downloader_info = {
-
-    name: user.name,
-    surname: user.surname,
-    downloadedOn: downloadedOn
-  };
-  Save_options = {
-    author: bookToSave['author'] || 'author',
-    title: bookToSave['title'] || 'title',
-    rating: 0,
-    status: bookToSave['readStatus'] || 0,
-    url: saveTo || 'url',
-    review: bookToSave['review'] || 'review',
-    downloader_Id: user._id,
-    info: downloader_info
-  };
-  Loc
-    .find({
-      $and: [{
-          title: Save_options.title
-        }, {
-          author: Save_options.author
-        },
-        {
-          downloader_Id: Save_options.downloader_Id
-        }
-      ]
-    })
-    .exec((err, docs) => {
-      if (err) throw err;
-      if (docs.length !== 0) {
-        return sendJSONresponse(res, 200, {
-          'message': `Book(s) with this title and author is exist!`
-        });
+  BooksShema
+    .findById(bookInfo._id)
+    .populate('attachedBook')
+    .exec((err, book) => {
+      if (err) {
+        cb(getErrorMessage(err), null);
       } else {
-        Loc
-          .create(Save_options,
-            function(err, saved_book) {
-              if (err) {
-                console.log(err);
-                sendJSONresponse(res, 200, {
-                  'message': `Can't save new book`
-                });
-              } else {
-                // console.log(saved_book);
-                sendJSONresponse(res, 200, {
-                  'message': `book was succsesfully save`
-                });
-              }
-            })
-      }
-      // fs.rename(docs.url, saveTo, (err) => {
-      //   if (err) throw err;
-      //   console.log('Rename complete!');
-      // });
-    })
-
-}
-var saveTo = '';
-
-function editFunc(req, res, user, bookToSave) {
-  Loc
-    .findById(bookToSave._id)
-    .exec(function(err, data) {
-      if (err) throw err;
-      if (data) {
-        User
-          .findOne({
-            token: req.token
+        if (book) {
+          book.update({
+            $set: {
+              author: bookInfo.author || book.autho,
+              title: bookInfo.title || book.title,
+              status: bookInfo.status || book.status,
+              review: bookInfo.review || book.autreviewhor
+            }
+          }, (err, updatedBook) => {
+            if (err) {
+              cb(getErrorMessage(err), null);
+            } else {
+              cb(null, updatedBook);
+            }
           })
-          .exec((err, user) => {
+        }
+      }
+    })
+}
+
+function getErrorMessage(err) {
+  var errors = [];
+  var errorObj = {};
+  Object.keys(err.errors).forEach((errorName, index) => {
+    errorObj[errorName] = err.errors[errorName].message;
+  })
+  errors.push(errorObj);
+  return errors;
+}
+
+function deleteBookFromDb(bookId, cb) {
+  BooksShema
+    .findById(bookId)
+    .populate('attachedBook')
+    .exec((err, book) => {
+      if (err) throw err;
+      var index = book.attachedBook.filepath.lastIndexOf('/');
+      var folder = book.attachedBook.filepath.slice(0, index);
+      if (fs.existsSync(folder)) {
+        fs.unlink(book.attachedBook.filepath, (err) => {
+          if (err) throw err;
+          fs.readdir(folder, (err, items) => {
             if (err) throw err;
-            if (user) {
-              Loc
-                .find({
-                  $and: [{
-                      title: bookToSave['title']
-                    }, {
-                      author: bookToSave['author']
-                    },
-                    {
-                      downloader_Id: user.downloader_Id
-                    }
-                  ]
-                })
-                .exec((err, docs) => {
-                  if (err) throw err;
-                  if (docs.length !== 0) {
-                    return sendJSONresponse(res, 200, {
-                      'message': `Book(s) with this title and author is exist!`
-                    });
-                  } else {
-                    var author, title, status, url, review;
-                    Loc
-                      .findById(bookToSave._id)
-                      .exec((err, singleBook) => {
-                        if (err) throw err;
-                        if (singleBook) {
-                          console.log("bookToSave['review']", bookToSave['review']);
-                          author = ((bookToSave['author'] != 'undefined') && (bookToSave['author'] != '')) ? bookToSave['author'] : singleBook.author;
-                          title = ((bookToSave['title'] != 'undefined') && (bookToSave['title'] != '')) ? bookToSave['title'] : singleBook.title;
-                          status = ((bookToSave['readStatus'] != 'undefined') && (bookToSave['readStatus'] != '')) ? bookToSave['readStatus'] : singleBook.status;
-                          review = ((bookToSave['review'] != 'undefined') && (bookToSave['review'] != '')) ? bookToSave['review'] : singleBook.review;
-                          var ext = '.' + data.url.split('.').reverse()[0];
-                          var source = './uploads/' + user._id + '/' + author + '__' + title;
-                          var saveTo = source + ext;
-                          url = saveTo;
-                          review = ((bookToSave['review'] != 'undefined') && (bookToSave['review'] != '')) ? bookToSave['review'] : singleBook.review;
-                          console.log("bookToSave['author']" + bookToSave['author']);
-                          console.log(author + ' - ' + title + ' - ' + singleBook.author + ' - ' + singleBook.title);
-                          if (!fs.existsSync(saveTo)) {
-                            fs.rename(data.url, saveTo, (err) => {
-                              if (err) throw err;
-                              console.log('Rename complete!');
-                            });
-                          } else {
-                            console.log('Rename bad!');
-                            // return sendJSONresponse(res, 200, {
-                            //   'message': `Book(s) with this title and author is exist!`
-                            // });
-                          }
-                          Loc
-                            .update({
-                              _id: bookToSave._id
-                            }, {
-                              $set: {
-                                author: author,
-                                title: title,
-                                status: status,
-                                url: url,
-                                review: review,
-                              }
-                            }, function(err) {
-                              console.log(err);
-                            });
-                        }
-                      })
-
-
-                  }
-                })
+            if (!items.length) {
+              fs.rmdirSync(folder)
+            } else {
+              console.log('items is exist', items);
             }
           })
-
-
+        })
       } else {
-        console.log('not found');
+        console.log('errors');
       }
+
+      book.attachedBook.remove();
+      book.remove();
     });
+  // .findById(ObjectId(bookId))
+  // .exec((err, data) => {
+  //   if (err) throw err;
+  //   if (data) {
+  //     console.log('data');
+  //   } else {
+  //     console.log('wtf');
+  //   }
+  // })
 }
-
-function deleteBookLocal(res, id) {
-  Loc
-    .findById(ObjectId(id))
-    .exec((err, data) => {
-      if (err) throw err;
-      if (data) {
-        let way = data.url.split('/');
-        let length = way.length;
-        way = way.slice(0, length - 1).join('/');
-        Loc
-          .remove({
-            _id: ObjectId(id)
-          }, function(err) {
-            if (err) return err;
-            // removed!
-          });
-        if (!fs.existsSync(data.url)) {
-          console.log('Not exist');
-          return sendJSONresponse(res, 200, {
-            'message': `This book not exist!`
-          });
-        } else {
-          fs.unlinkSync(data.url);
-          fs.readdir(way, (err, files) => {
-            if (files.length === 0) {
-              fs.rmdirSync(way);
-            }
-          })
-        }
-      } else {
-        console.log('wtf');
-      }
-    })
-}
-
-// function(err, saved_book) {
-//   if (err) {
-//     console.log(err);
-//     sendJSONresponse(res, 200, {
-//       'message': `Can't save new book`
-//     });
-//   } else {
-//     // console.log(saved_book);
-//     sendJSONresponse(res, 200, {
-//       'message': `book was succsesfully save`
-//     });
-//   }
-// }

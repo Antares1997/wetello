@@ -50,7 +50,6 @@ module.exports.registration = function(req, res) {
   User.registration(username, name, surname, password, email, googleId, function(err, user) {
     if (err) {
       if (err instanceof AuthError) {
-        console.log('AuthError', AuthError);
         sendJSONresponse(res, 200, {
           'message': err.message,
           'status': 0
@@ -80,7 +79,7 @@ module.exports.registration = function(req, res) {
 function verifyInp(token, secret, res) {
   jwt.verify(token, secret, (err, data) => {
     if (err) {
-      console.log('bad ver');
+      console.log('bad verififcation');
       return false;
     }
     return true;

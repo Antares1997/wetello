@@ -32,6 +32,7 @@ export class ReadStatusComponent implements OnInit {
   getStatusValue(event) {
     event.target.parentNode.classList.toggle('two');
     this.readStatus = event.target.checked;
+
     let updateBook = {
       readStatus: this.readStatus,
       id: this.targetBook._id
@@ -46,7 +47,7 @@ export class ReadStatusComponent implements OnInit {
     }
   }
   ngOnInit() {
-    if ((this.targetBook.status === 0) || (this.targetBook.status === '0')) {
+    if ((this.targetBook.status === false) || (this.targetBook.status === 'false')) {
       this.statusText = 'OFF';
     } else {
       this.statusText = 'ON';

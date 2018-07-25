@@ -4,6 +4,7 @@ var fs = require('fs');
 var mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectID;
 var Attachments = mongoose.model('attachment');
+var AttachedBook = mongoose.model('AttachedBook');
 var User = mongoose.model('user');
 var jwt = require('../models/users').jwt;
 var time = new Date();
@@ -102,6 +103,13 @@ var inter = setInterval(() => {
 
         }
       });
+
+    AttachedBook
+      .remove({
+        'isUsed': false
+      }, (err, succsess) => {
+        if (err) throw err;
+      })
 
   },
   interval);

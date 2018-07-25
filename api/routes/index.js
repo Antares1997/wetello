@@ -20,19 +20,22 @@ router.get('/auth/google', passport.authenticate('google', {
 router.get('/auth/google/callback', (req, res, next) => {
   passport.authenticate('google', function(err, user, info) {
     if (err) {
+      console.log('test');
       return next(err);
     }
     if (!user) {
+
       return res.redirect('/login?message="log in again"');
     } else {
-      console.log('user', user);
+      console.log('test1');
+      req.logIn(user, function(err) {
+        if (err) {
+          return next(err);
+        }
+        return res.redirect('http://books-service.com');
+      });
     }
-    req.logIn(user, function(err) {
-      if (err) {
-        return next(err);
-      }
-      return res.redirect('/bookslist?userToken=' + user.token);
-    });
+
   })(req, res, next);
 });
 // {
@@ -48,6 +51,7 @@ router.get('/getUser', verifyToken, ctrlLocations.getUser);
 // /* GET add  book */
 // router.get('/addbook', ctrlAddBooks.getAddBook);
 router.post('/addbook', verifyToken, ctrlActionBooks.addBook);
+router.post('/saveBook', verifyToken, ctrlActionBooks.saveBook);
 // /* GET edit  book */
 // router.get('/editbook', ctrlLocations.getEditbook);
 router.put('/editbook', verifyToken, ctrlActionBooks.editbook);
@@ -58,7 +62,7 @@ router.put('/setRating', verifyToken, ctrlActionBooks.setRating);
 router.put('/setReadStatus', verifyToken, ctrlActionBooks.setReadStatus);
 router.get('/getInfo', verifyToken, ctrlActionBooks.getInfo);
 //
-router.get('/sendFIle', ctrlActionBooks.sendFile);
+router.get('/sendFile', ctrlActionBooks.sendFile);
 router.get('/chat', verifyToken, ctrlChat.chat);
 router.get('/chat/:id', verifyToken, ctrlChat.chat);
 router.post('/chat/deleteMessage', verifyToken, ctrlChat.deleteMessage)

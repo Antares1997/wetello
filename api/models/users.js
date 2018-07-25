@@ -7,6 +7,10 @@ var path = require('path');
 var uniqueValidator = require('mongoose-unique-validator');
 mongoose.Promise = global.Promise;
 mongoose.set('debug', true);
+var validateEmail = function(email) {
+  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return re.test(email)
+};
 var usersSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -23,7 +27,10 @@ var usersSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    trim: true,
+    lowercase: true,
     required: [true, 'Email filed is required!'],
+    validate: [validateEmail, 'Please fill a valid email address'],
     unique: true
   },
   hashedPassword: {

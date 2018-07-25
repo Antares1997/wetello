@@ -27,12 +27,12 @@ io.on('connection', ctrlIo);
 http.listen(3000, function() {
   console.log('on 3000!');
 });
-app.use('/tmp', express.static(path.join(__dirname, '/tmp/')));
-//app.use(express.static(path.join(__dirname, '/client/dist/')));
+// app.use('/tmp', express.static(path.join(__dirname, '/tmp/')));
+// app.use(express.static(path.join(__dirname, '/client/dist/')));
 // app.use(() => {
 //   console.log(__dirname)
 // })
-// app.use(express.static(path.join(__dirname, '/uploads')));
+app.use(express.static(path.join(__dirname, '/uploads')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -70,10 +70,10 @@ app.use(session({
 //   }
 // })
 app.use('/api', routesApi);
-//app.use('/*', (req, res) => {
-//  res.sendFile(__dirname + '/client/dist/index.html');
-//  // res.redirect('/');
-//});
+// app.use('/*', (req, res) => {
+//   res.sendFile(__dirname + '/client/dist/index.html');
+//   // res.redirect('/');
+// });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

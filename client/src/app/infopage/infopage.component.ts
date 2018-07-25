@@ -34,15 +34,10 @@ export class InfopageComponent {
   }
 
   Download() {
-    // console.log(this.infoAboutBook)
     var bookID = this.infoAboutBook._id;
     let thefile;
     this.dynamoUrl = this.getbooksService.getDownloadBookUrl(bookID);
-    // if (this.dynamoUrl) {
-    // const fileURL = URL.createObjectURL(this.dynamoUrl);
-    //   window.href = this.dynamoUrl;
-    // }
-
+    console.log(this.dynamoUrl)
     return this.dynamoUrl;
   }
 }
